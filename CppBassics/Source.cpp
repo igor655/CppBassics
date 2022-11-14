@@ -16,7 +16,7 @@ int main()
 
 	cout << "Select sort\n";
 
-	int arr[]{ 12, 19, 4, 8, 9, 2,5, -3, -4, 11 };
+	int arr[]{ 12, 19, 4, 8, 9, 2,5, -3, -4, 11, -22 };
 	int N = sizeof(arr) / sizeof(int);
 	cout << "arr before sort\n";
 	print(arr, N);
@@ -55,7 +55,11 @@ void selectSort(T* arr, int n)
 
 		}
 		//swap
-		swap(arr[i], arr[index]);
+		//swap(arr[i], arr[index]);
+
+		T tmp = arr[i];
+		arr[i] = arr[index];
+		arr[index] = tmp;
 
 	}
 }
