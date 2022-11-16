@@ -3,124 +3,110 @@
 
 
 using namespace std;
-template<class T>
-void print(T*, int n);
-
-
-void mergeSort(int arr[], int left, int right);
-
-
-void merge(int arr[], int begin, int end);
 
 
 
 
-int main()
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include<iostream>
+
+#define N 15
+
+
+
+
+// ќбъедин€ем два отсортированных подмассива `arr[lowЕmid]` и `arr[mid+1Еhigh]`
+void Merge(int arr[], int aux[], int low, int mid, int high)
 {
+    int k = low, i = low, j = mid + 1;
 
-	cout << "Merge sort\n";
+    // ѕока есть элементы в левом и правом прогонах
+    while (i <= mid && j <= high)
+    {
+        if (arr[i] <= arr[j]) {
+            aux[k++] = arr[i++];
+        }
+        else {
+            aux[k++] = arr[j++];
+        }
+    }
 
-	int arr[]{ 12, 16, 2, 9, 8, -1, 0, -5, 22 };
-	int size = sizeof(arr) / sizeof(arr[0]);
-	//const int size = 9;
-	cout << " array before merge sort\n";
-	print(arr, size);
-	mergeSort(arr, 0, size-1);
+    //  опируем оставшиес€ элементы
+    while (i <= mid) {
+        aux[k++] = arr[i++];
+    }
 
-	cout << " array after merge sort\n";
-	print(arr, size);
+    // ¬торую половину копировать не нужно (поскольку остальные элементы
+    // уже наход€тс€ на своем правильном месте во вспомогательном массиве)
 
-	//dinamic array
-
-	/*int N = 10;
-	int* arr2 = new int[N] { 10, 3, 16, 2, 5, 4, 8, 9, -1, -7 };
-	print(arr2, N);*/
-
-	
-
-	cin.get();
-	return 0;
+    // копируем обратно в исходный массив, чтобы отразить пор€док сортировки
+    for (int i = low; i <= high; i++) {
+        arr[i] = aux[i];
+    }
 }
 
-template<class T>
-void print(T* arr, int n)
+// —ортируем массив `arr[lowЕhigh]`, использу€ вспомогательный массив `aux`
+void mergesort(int arr[], int aux[], int low, int high)
 {
-	for (size_t i = 0; i < n; i++)
-	{
-		cout << arr[i] << " ";
-	}
-	cout << "\n ptr size = " << sizeof(int*) << endl; // size ptr to int 
-	cout << "\n---------------------------------\n";
+    // Ѕазовый вариант
+    if (high == low) {        // если размер прогона == 1
+        return;
+    }
+
+    // найти середину
+    int mid = (low + ((high - low) >> 1));
+
+    // рекурсивное разделение выполн€етс€ на две половины до тех пор, пока размер выполнени€ не станет == 1,
+    // затем объедин€ем их и возвращаемс€ вверх по цепочке вызовов
+
+    mergesort(arr, aux, low, mid);          // разделить/объединить левую половину
+    mergesort(arr, aux, mid + 1, high);     // разделить/объединить правую половину
+
+    Merge(arr, aux, low, mid, high);        // объединить два полупрогона.
 }
 
-
-
-void mergeSort(int arr[], int left, int right)
+// ‘ункци€ дл€ проверки, отсортирован ли arr в пор€дке возрастани€ или нет
+int isSorted(int arr[])
 {
-	int tmp = 0;
-	if (left < right)
-	
-		if (right - left == 1)
-		{
-			if (arr[left] > arr[right])
-			{
-				tmp = arr[left];
-				arr[left] = arr[right];
-				arr[right] = tmp;
-			}
-		}
-		else
-		{
-			mergeSort(arr, left, left+ (right - left) / 2);
-			mergeSort(arr, left+(right - left) / 2 + 1 , right );
-			merge(arr, left, right);
-		}
-	
+    int prev = arr[0];
+    for (int i = 1; i < N; i++)
+    {
+        if (prev > arr[i])
+        {
+            printf("MergeSort Fails!!");
+            return 0;
+        }
+        prev = arr[i];
+    }
 
+    return 1;
 }
 
-
-void merge(int arr[], int begin, int end)
+// –еализаци€ алгоритма сортировки сли€нием на C
+int main(void)
 {
-	int i = begin;
-	int mid = begin + (end - begin) / 2;
-	int j = mid + 1;
- 	int k = 0; // index of temp array
-	//int tmpArr[sizeof(arr)/ sizeof(arr[0]) + 2]; // size of temp array array
-	//int tmpArr[20]; // size of temp array array
-	//int tmpArr[20]; // size of temp array array
-	int* tmpArr = new int[end + 2]; // dynamic array
+    std::cout << "Merge sort 3 C vercsion\n";
+    int arr[N], aux[N];
+    srand(time(NULL));
 
-	while (i <= mid && j <= end)
-	{
-		if (arr[i] <= arr[j])
-		{
-			tmpArr[k] = arr[i];
-			i++;
+    // генерируем случайный ввод целых чисел
+    for (int i = 0; i < N; i++) {
+        aux[i] = arr[i] = (rand() % 100) - 50;
+    }
 
-		}
-		else
-		{
-			tmpArr[k] = arr[j];
-			j++;
-		}
-		k++;
-	}
+    // сортируем массив `arr`, использу€ вспомогательный массив `aux`
+    mergesort(arr, aux, 0, N - 1);
 
-	//
-	while (i <= mid)
-	{
-		tmpArr[k] = arr[i];
-		i++; k++;
-	}
+    if (isSorted(arr))
+    {
+        for (int i = 0; i < N; i++) {
+            printf("%d ", arr[i]);
+        }
+    }
 
-	while (j <= end)
-	{
-		tmpArr[k] = arr[j];
-		j++; k++;
-	}
-	for (int i = 0; i < k; i++)
-	{
-		arr[begin + i] = tmpArr[i];
-	}
+    return 0;
 }
+
