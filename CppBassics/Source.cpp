@@ -30,6 +30,12 @@ int main()
 	cout << " array after merge sort\n";
 	print(arr, size);
 
+	//dinamic array
+
+	/*int N = 10;
+	int* arr2 = new int[N] { 10, 3, 16, 2, 5, 4, 8, 9, -1, -7 };
+	print(arr2, N);*/
+
 	
 
 	cin.get();
@@ -43,7 +49,7 @@ void print(T* arr, int n)
 	{
 		cout << arr[i] << " ";
 	}
-	cout << "\nsize = " << sizeof(int*) << endl; // size ptr to int 
+	cout << "\n ptr size = " << sizeof(int*) << endl; // size ptr to int 
 	cout << "\n---------------------------------\n";
 }
 
@@ -82,7 +88,8 @@ void merge(int arr[], int begin, int end)
  	int k = 0; // index of temp array
 	//int tmpArr[sizeof(arr)/ sizeof(arr[0]) + 2]; // size of temp array array
 	//int tmpArr[20]; // size of temp array array
-	int tmpArr[20]; // size of temp array array
+	//int tmpArr[20]; // size of temp array array
+	int* tmpArr = new int[end + 2]; // dynamic array
 
 	while (i <= mid && j <= end)
 	{
